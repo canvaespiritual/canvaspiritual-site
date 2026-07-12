@@ -394,8 +394,21 @@ export default function Home() {
           <div>
             <h3>Institucional</h3>
             <Link href="/sobre">Sobre nós</Link>
-            <Link href="/privacidade">Privacidade</Link>
-            <Link href="/termos">Termos de uso</Link>
+            <a
+  href="https://api.canvaspiritual.com/afiliado/privacidade.html"
+  target="_blank"
+  rel="noreferrer"
+>
+  Política de privacidade
+</a>
+
+<a
+  href="https://api.canvaspiritual.com/afiliado/termos.html"
+  target="_blank"
+  rel="noreferrer"
+>
+  Termos de uso
+</a>
             <a
   href={REFUND_URL}
   target="_blank"
