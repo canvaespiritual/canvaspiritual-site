@@ -23,7 +23,7 @@ export default function Home() {
 
           <nav className="desktop-nav" aria-label="Navegação principal">
   <a href="#como-funciona">Como funciona</a>
-  <a href="#produtos">Produtos</a>
+  <Link href="/produtos">Produtos</Link>
   <Link href={PARTNERS_URL}>Seja um parceiro</Link>
   <a href="#ajuda">Ajuda</a>
 </nav>
@@ -240,26 +240,45 @@ export default function Home() {
             </article>
 
             <article className="product-card">
-              <span className="product-tag">Em breve</span>
-              <h3>Mapa da Alma</h3>
-              <p>
-                Uma jornada de reflexão para aprofundar sua visão sobre si
-                mesmo, seus valores e sua direção interior.
-              </p>
-              <span className="disabled-link">Conhecer em breve</span>
-            </article>
+  <span className="product-tag">Jornada de consciência</span>
 
-            <article className="product-card">
-              <span className="product-tag">Curso</span>
-              <h3>Engenharia da Consciência</h3>
-              <p>
-                Conteúdos estruturados para compreender padrões internos e
-                desenvolver uma relação mais consciente com a vida.
-              </p>
-              <Link href="/produtos" className="text-link">
-  Ver produtos →
-</Link>
-            </article>
+  <h3>Mapa da Alma</h3>
+
+  <p>
+    Conheça padrões emocionais que podem limitar suas escolhas,
+    relações e decisões, e comece a observá-los com mais clareza.
+  </p>
+
+  <a
+    href="https://api.canvaspiritual.com/landing-48-prisoes.html"
+    target="_blank"
+    rel="noreferrer"
+    className="text-link"
+  >
+    Conhecer as 48 Prisões →
+  </a>
+</article>
+
+           <article className="product-card">
+  <span className="product-tag">Curso</span>
+
+  <h3>Engenharia da Consciência</h3>
+
+  <p>
+    Conteúdos estruturados para compreender padrões internos e
+    desenvolver uma relação mais consciente, equilibrada e harmoniosa
+    com a vida.
+  </p>
+
+  <a
+    href="https://api.canvaspiritual.com/codigodaharmonia.html"
+    target="_blank"
+    rel="noreferrer"
+    className="text-link"
+  >
+    Conhecer o Código da Harmonia →
+  </a>
+</article>
           </div>
         </div>
       </section>
