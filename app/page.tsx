@@ -1,8 +1,10 @@
 import Link from "next/link";
 
-const CHECKUP_URL = "https://SEU-LINK-ATUAL-DO-QUIZ";
-const PARCEIROS_URL = "https://SEU-LINK-ATUAL-DE-PARCEIROS";
-const WHATSAPP_URL = "https://wa.me/55SEUNUMERO";
+const CHECKUP_URL = "https://api.canvaspiritual.com/quiz-geral.html";
+const PARTNERS_URL = "/parceiros";
+const LOGIN_URL = "https://api.canvaspiritual.com/afiliado/login.html";
+const WHATSAPP_URL =
+  "https://wa.me/5562986530000?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20o%20Canvas%20Espiritual.";
 
 export default function Home() {
   return (
@@ -19,20 +21,31 @@ export default function Home() {
           </Link>
 
           <nav className="desktop-nav" aria-label="Navegação principal">
-            <a href="#como-funciona">Como funciona</a>
-            <a href="#produtos">Produtos</a>
-            <a href="#parceiros">Seja um parceiro</a>
-            <a href="#ajuda">Ajuda</a>
-          </nav>
+  <a href="#como-funciona">Como funciona</a>
+  <a href="#produtos">Produtos</a>
+  <Link href={PARTNERS_URL}>Seja um parceiro</Link>
+  <a href="#ajuda">Ajuda</a>
+</nav>
 
-          <a
-            href={CHECKUP_URL}
-            className="button button-small"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Fazer meu check-up
-          </a>
+<div className="header-actions">
+  <a
+    href={LOGIN_URL}
+    className="login-link"
+    target="_blank"
+    rel="noreferrer"
+  >
+    Entrar
+  </a>
+
+  <a
+    href={CHECKUP_URL}
+    className="button button-small"
+    target="_blank"
+    rel="noreferrer"
+  >
+    Fazer meu check-up
+  </a>
+</div>
         </div>
       </header>
 
@@ -267,14 +280,9 @@ export default function Home() {
           </div>
 
           <div className="partner-action">
-            <a
-              href={PARCEIROS_URL}
-              className="button button-light"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Quero ser parceiro
-            </a>
+            <Link href={PARTNERS_URL} className="button button-light">
+  Conhecer as formas de parceria
+</Link>
 
             <span>Cadastro, treinamento e materiais em um só lugar.</span>
           </div>
@@ -336,9 +344,7 @@ export default function Home() {
               Check-up Emocional
             </a>
             <Link href="/cursos">Cursos e produtos</Link>
-            <a href={PARCEIROS_URL} target="_blank" rel="noreferrer">
-              Seja um parceiro
-            </a>
+            <Link href={PARTNERS_URL}>Seja um parceiro</Link>
           </div>
 
           <div>
@@ -348,6 +354,9 @@ export default function Home() {
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
               WhatsApp
             </a>
+            <a href={LOGIN_URL} target="_blank" rel="noreferrer">
+  Área do parceiro
+</a>
           </div>
 
           <div>

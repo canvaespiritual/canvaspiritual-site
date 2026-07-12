@@ -713,3 +713,219 @@ h3 {
     flex-direction: column;
   }
 }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.login-link {
+  color: var(--text-soft);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.login-link:hover {
+  color: var(--text);
+}
+
+.partners-hero {
+  padding: 100px 0 75px;
+  background:
+    radial-gradient(
+      circle at 80% 15%,
+      rgba(181, 155, 124, 0.22),
+      transparent 35%
+    ),
+    var(--background);
+}
+
+.partners-hero-content {
+  max-width: 850px;
+  text-align: center;
+}
+
+.partners-hero-content h1 {
+  max-width: 850px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.partners-hero-content p {
+  max-width: 730px;
+  margin: 0 auto;
+  color: var(--text-soft);
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+.partners-options-section {
+  padding-top: 50px;
+}
+
+.partner-options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.partner-option-card {
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  padding: 34px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--surface);
+}
+
+.partner-option-card h2 {
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+.partner-option-card p {
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.option-number {
+  margin-bottom: 35px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.partner-benefits {
+  flex: 1;
+  margin: 22px 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.partner-benefits li {
+  position: relative;
+  margin: 15px 0;
+  padding-left: 24px;
+  color: var(--text-soft);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.partner-benefits li::before {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  content: "";
+}
+
+.highlighted-option {
+  border-color: var(--primary-dark);
+  background: var(--primary-dark);
+  color: white;
+}
+
+.highlighted-option p,
+.highlighted-option .partner-benefits li {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.presentation-option {
+  background: var(--surface-soft);
+}
+
+.partner-option-button {
+  width: 100%;
+}
+
+.disabled-button {
+  border-color: var(--border);
+  background: var(--border);
+  color: var(--text-soft);
+  cursor: not-allowed;
+}
+
+.disabled-button:hover {
+  transform: none;
+  background: var(--border);
+}
+
+.partner-login-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  margin-top: 35px;
+  padding: 45px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--surface);
+}
+
+.partner-login-box h2 {
+  margin-bottom: 10px;
+  font-size: 35px;
+}
+
+.partner-login-box p {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.compact-footer {
+  padding-top: 25px;
+}
+
+.partners-footer-bottom {
+  align-items: center;
+}
+
+.partners-footer-bottom a {
+  margin: 0;
+}
+
+@media (max-width: 950px) {
+  .partner-options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .partner-option-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 650px) {
+  .header-actions .login-link {
+    display: none;
+  }
+
+  .partners-hero {
+    padding: 70px 0 55px;
+  }
+
+  .partners-hero-content {
+    text-align: left;
+  }
+
+  .partners-hero-content h1 {
+    font-size: 44px;
+  }
+
+  .partner-option-card {
+    padding: 28px;
+  }
+
+  .partner-option-card h2 {
+    font-size: 29px;
+  }
+
+  .partner-login-box {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 30px;
+  }
+}
