@@ -5,7 +5,8 @@ const PARTNERS_URL = "/parceiros";
 const LOGIN_URL = "https://api.canvaspiritual.com/afiliado/login.html";
 const WHATSAPP_URL =
   "https://wa.me/5562986530000?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20o%20Canvas%20Espiritual.";
-
+const REFUND_URL =
+  "https://wa.me/5562986530000?text=Ol%C3%A1%2C%20desejo%20solicitar%20o%20reembolso%20de%20uma%20compra%20no%20Canvas%20Espiritual.%20Meu%20e-mail%20utilizado%20na%20compra%20%C3%A9%3A%20";
 export default function Home() {
   return (
     <main>
@@ -255,9 +256,9 @@ export default function Home() {
                 Conteúdos estruturados para compreender padrões internos e
                 desenvolver uma relação mais consciente com a vida.
               </p>
-              <Link href="/cursos" className="text-link">
-                Ver cursos →
-              </Link>
+              <Link href="/produtos" className="text-link">
+  Ver produtos →
+</Link>
             </article>
           </div>
         </div>
@@ -297,13 +298,19 @@ export default function Home() {
           </div>
 
           <div className="help-grid">
-            <Link href="/segunda-via" className="help-card">
-              <span className="help-icon">↻</span>
-              <div>
-                <h3>Segunda via do relatório</h3>
-                <p>Recupere o acesso a um relatório já adquirido.</p>
-              </div>
-            </Link>
+            <a
+  href="https://api.canvaspiritual.com/segunda-via.html"
+  target="_blank"
+  rel="noreferrer"
+  className="help-card"
+>
+  <span className="help-icon">↻</span>
+
+  <div>
+    <h3>Segunda via do relatório</h3>
+    <p>Recupere o acesso a um relatório já adquirido.</p>
+  </div>
+</a>
 
             <a
               href={WHATSAPP_URL}
@@ -343,14 +350,20 @@ export default function Home() {
             <a href={CHECKUP_URL} target="_blank" rel="noreferrer">
               Check-up Emocional
             </a>
-            <Link href="/cursos">Cursos e produtos</Link>
+            <Link href="/produtos">Cursos e produtos</Link>
             <Link href={PARTNERS_URL}>Seja um parceiro</Link>
           </div>
 
           <div>
             <h3>Suporte</h3>
             <Link href="/ajuda">Central de ajuda</Link>
-            <Link href="/segunda-via">Segunda via</Link>
+          <a
+  href="https://api.canvaspiritual.com/segunda-via.html"
+  target="_blank"
+  rel="noreferrer"
+>
+  Segunda via
+</a>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
               WhatsApp
             </a>
@@ -364,9 +377,14 @@ export default function Home() {
             <Link href="/sobre">Sobre nós</Link>
             <Link href="/privacidade">Privacidade</Link>
             <Link href="/termos">Termos de uso</Link>
-            <Link href="/reembolso" className="refund-link">
-              Solicitar reembolso
-            </Link>
+            <a
+  href={REFUND_URL}
+  target="_blank"
+  rel="noreferrer"
+  className="refund-link"
+>
+  Solicitar reembolso
+</a>
           </div>
         </div>
 
