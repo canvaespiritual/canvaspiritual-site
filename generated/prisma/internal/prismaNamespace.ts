@@ -609,6 +609,7 @@ export const ProspectScalarFieldEnum = {
   bairro: 'bairro',
   estado: 'estado',
   pais: 'pais',
+  idioma: 'idioma',
   whatsapp: 'whatsapp',
   email: 'email',
   profissao: 'profissao',

@@ -35,6 +35,7 @@ model Prospect {
   bairro          String @default("")
   estado          String @default("")
   pais            String @default("")
+  idioma          String @default("")
 
   whatsapp String @default("")
   email    String @default("")
@@ -58,7 +59,9 @@ model Prospect {
   @@index([cidade])
   @@index([estado])
   @@index([profissao])
+  @@index([idioma])
   @@map("prospects")
+
 }
 
 model ProspectImport {

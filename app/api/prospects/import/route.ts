@@ -4,6 +4,7 @@ import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db";
 import { databaseProspectToClient } from "@/lib/prospect-mapper";
 import type { Prospect } from "@/types/prospect";
+import { detectLanguage } from "@/lib/language";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -33,6 +34,7 @@ interface NormalizedProspect {
   bairro: string;
   estado: string;
   pais: string;
+  idioma: string;
 
   whatsapp: string;
   email: string;
@@ -166,6 +168,13 @@ function normalizeProspect(
     bairro: normalizeText(prospect.bairro),
     estado: normalizeText(prospect.estado),
     pais: normalizeText(prospect.pais),
+    idioma:
+  normalizeText(prospect.idioma) ||
+  detectLanguage(
+    normalizeText(prospect.biography),
+    normalizeText(prospect.fullName),
+    normalizeText(prospect.businessAddress),
+  ),
 
     whatsapp: normalizeText(prospect.whatsapp),
     email: normalizeText(prospect.email),
@@ -247,6 +256,10 @@ function mergeIncomingProspects(
     pais:
       existing.pais || incoming.pais,
 
+    idioma:
+  existing.idioma ||
+  incoming.idioma,  
+
     whatsapp:
       existing.whatsapp || incoming.whatsapp,
 
@@ -301,6 +314,7 @@ function buildUpdateData(
     bairro: string;
     estado: string;
     pais: string;
+    idioma: string;
     whatsapp: string;
     email: string;
     profissao: string;
@@ -370,6 +384,10 @@ function buildUpdateData(
 
     email:
       current.email || incoming.email,
+
+    idioma:
+  current.idioma ||
+  incoming.idioma,  
 
     profissao:
       current.profissao || incoming.profissao,
@@ -588,6 +606,7 @@ export async function POST(request: Request) {
             bairro: prospect.bairro,
             estado: prospect.estado,
             pais: prospect.pais,
+            idioma: prospect.idioma,
 
             whatsapp: prospect.whatsapp,
             email: prospect.email,

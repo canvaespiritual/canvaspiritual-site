@@ -1,5 +1,6 @@
 import Papa from "papaparse";
 import type { Prospect, ProspectStatus } from "@/types/prospect";
+import { detectLanguage } from "@/lib/language";
 
 type CsvRow = Record<string, string | undefined>;
 
@@ -88,7 +89,13 @@ function createProspect(row: CsvRow, fileName: string): Prospect | null {
     bairro: normalizeText(row.bairro),
     estado: normalizeText(row.estado),
     pais: normalizeText(row.pais),
-
+    idioma:
+  normalizeText(row.idioma) ||
+  detectLanguage(
+    normalizeText(row.biography),
+    normalizeText(row.fullName),
+    normalizeText(row.businessAddress),
+  ),
     whatsapp: normalizeText(row.whatsapp),
     email: normalizeText(row.email),
 

@@ -53,6 +53,7 @@ export type ProspectMinAggregateOutputType = {
   bairro: string | null
   estado: string | null
   pais: string | null
+  idioma: string | null
   whatsapp: string | null
   email: string | null
   profissao: string | null
@@ -80,6 +81,7 @@ export type ProspectMaxAggregateOutputType = {
   bairro: string | null
   estado: string | null
   pais: string | null
+  idioma: string | null
   whatsapp: string | null
   email: string | null
   profissao: string | null
@@ -107,6 +109,7 @@ export type ProspectCountAggregateOutputType = {
   bairro: number
   estado: number
   pais: number
+  idioma: number
   whatsapp: number
   email: number
   profissao: number
@@ -150,6 +153,7 @@ export type ProspectMinAggregateInputType = {
   bairro?: true
   estado?: true
   pais?: true
+  idioma?: true
   whatsapp?: true
   email?: true
   profissao?: true
@@ -177,6 +181,7 @@ export type ProspectMaxAggregateInputType = {
   bairro?: true
   estado?: true
   pais?: true
+  idioma?: true
   whatsapp?: true
   email?: true
   profissao?: true
@@ -204,6 +209,7 @@ export type ProspectCountAggregateInputType = {
   bairro?: true
   estado?: true
   pais?: true
+  idioma?: true
   whatsapp?: true
   email?: true
   profissao?: true
@@ -322,6 +328,7 @@ export type ProspectGroupByOutputType = {
   bairro: string
   estado: string
   pais: string
+  idioma: string
   whatsapp: string
   email: string
   profissao: string
@@ -376,6 +383,7 @@ export type ProspectWhereInput = {
   bairro?: Prisma.StringFilter<"Prospect"> | string
   estado?: Prisma.StringFilter<"Prospect"> | string
   pais?: Prisma.StringFilter<"Prospect"> | string
+  idioma?: Prisma.StringFilter<"Prospect"> | string
   whatsapp?: Prisma.StringFilter<"Prospect"> | string
   email?: Prisma.StringFilter<"Prospect"> | string
   profissao?: Prisma.StringFilter<"Prospect"> | string
@@ -407,6 +415,7 @@ export type ProspectOrderByWithRelationInput = {
   bairro?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   pais?: Prisma.SortOrder
+  idioma?: Prisma.SortOrder
   whatsapp?: Prisma.SortOrder
   email?: Prisma.SortOrder
   profissao?: Prisma.SortOrder
@@ -441,6 +450,7 @@ export type ProspectWhereUniqueInput = Prisma.AtLeast<{
   bairro?: Prisma.StringFilter<"Prospect"> | string
   estado?: Prisma.StringFilter<"Prospect"> | string
   pais?: Prisma.StringFilter<"Prospect"> | string
+  idioma?: Prisma.StringFilter<"Prospect"> | string
   whatsapp?: Prisma.StringFilter<"Prospect"> | string
   email?: Prisma.StringFilter<"Prospect"> | string
   profissao?: Prisma.StringFilter<"Prospect"> | string
@@ -472,6 +482,7 @@ export type ProspectOrderByWithAggregationInput = {
   bairro?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   pais?: Prisma.SortOrder
+  idioma?: Prisma.SortOrder
   whatsapp?: Prisma.SortOrder
   email?: Prisma.SortOrder
   profissao?: Prisma.SortOrder
@@ -511,6 +522,7 @@ export type ProspectScalarWhereWithAggregatesInput = {
   bairro?: Prisma.StringWithAggregatesFilter<"Prospect"> | string
   estado?: Prisma.StringWithAggregatesFilter<"Prospect"> | string
   pais?: Prisma.StringWithAggregatesFilter<"Prospect"> | string
+  idioma?: Prisma.StringWithAggregatesFilter<"Prospect"> | string
   whatsapp?: Prisma.StringWithAggregatesFilter<"Prospect"> | string
   email?: Prisma.StringWithAggregatesFilter<"Prospect"> | string
   profissao?: Prisma.StringWithAggregatesFilter<"Prospect"> | string
@@ -542,6 +554,7 @@ export type ProspectCreateInput = {
   bairro?: string
   estado?: string
   pais?: string
+  idioma?: string
   whatsapp?: string
   email?: string
   profissao?: string
@@ -573,6 +586,7 @@ export type ProspectUncheckedCreateInput = {
   bairro?: string
   estado?: string
   pais?: string
+  idioma?: string
   whatsapp?: string
   email?: string
   profissao?: string
@@ -604,6 +618,7 @@ export type ProspectUpdateInput = {
   bairro?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.StringFieldUpdateOperationsInput | string
   pais?: Prisma.StringFieldUpdateOperationsInput | string
+  idioma?: Prisma.StringFieldUpdateOperationsInput | string
   whatsapp?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   profissao?: Prisma.StringFieldUpdateOperationsInput | string
@@ -635,6 +650,7 @@ export type ProspectUncheckedUpdateInput = {
   bairro?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.StringFieldUpdateOperationsInput | string
   pais?: Prisma.StringFieldUpdateOperationsInput | string
+  idioma?: Prisma.StringFieldUpdateOperationsInput | string
   whatsapp?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   profissao?: Prisma.StringFieldUpdateOperationsInput | string
@@ -666,6 +682,7 @@ export type ProspectCreateManyInput = {
   bairro?: string
   estado?: string
   pais?: string
+  idioma?: string
   whatsapp?: string
   email?: string
   profissao?: string
@@ -697,6 +714,7 @@ export type ProspectUpdateManyMutationInput = {
   bairro?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.StringFieldUpdateOperationsInput | string
   pais?: Prisma.StringFieldUpdateOperationsInput | string
+  idioma?: Prisma.StringFieldUpdateOperationsInput | string
   whatsapp?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   profissao?: Prisma.StringFieldUpdateOperationsInput | string
@@ -728,6 +746,7 @@ export type ProspectUncheckedUpdateManyInput = {
   bairro?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.StringFieldUpdateOperationsInput | string
   pais?: Prisma.StringFieldUpdateOperationsInput | string
+  idioma?: Prisma.StringFieldUpdateOperationsInput | string
   whatsapp?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   profissao?: Prisma.StringFieldUpdateOperationsInput | string
@@ -767,6 +786,7 @@ export type ProspectCountOrderByAggregateInput = {
   bairro?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   pais?: Prisma.SortOrder
+  idioma?: Prisma.SortOrder
   whatsapp?: Prisma.SortOrder
   email?: Prisma.SortOrder
   profissao?: Prisma.SortOrder
@@ -803,6 +823,7 @@ export type ProspectMaxOrderByAggregateInput = {
   bairro?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   pais?: Prisma.SortOrder
+  idioma?: Prisma.SortOrder
   whatsapp?: Prisma.SortOrder
   email?: Prisma.SortOrder
   profissao?: Prisma.SortOrder
@@ -830,6 +851,7 @@ export type ProspectMinOrderByAggregateInput = {
   bairro?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   pais?: Prisma.SortOrder
+  idioma?: Prisma.SortOrder
   whatsapp?: Prisma.SortOrder
   email?: Prisma.SortOrder
   profissao?: Prisma.SortOrder
@@ -924,6 +946,7 @@ export type ProspectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   bairro?: boolean
   estado?: boolean
   pais?: boolean
+  idioma?: boolean
   whatsapp?: boolean
   email?: boolean
   profissao?: boolean
@@ -955,6 +978,7 @@ export type ProspectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   bairro?: boolean
   estado?: boolean
   pais?: boolean
+  idioma?: boolean
   whatsapp?: boolean
   email?: boolean
   profissao?: boolean
@@ -986,6 +1010,7 @@ export type ProspectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   bairro?: boolean
   estado?: boolean
   pais?: boolean
+  idioma?: boolean
   whatsapp?: boolean
   email?: boolean
   profissao?: boolean
@@ -1017,6 +1042,7 @@ export type ProspectSelectScalar = {
   bairro?: boolean
   estado?: boolean
   pais?: boolean
+  idioma?: boolean
   whatsapp?: boolean
   email?: boolean
   profissao?: boolean
@@ -1031,7 +1057,7 @@ export type ProspectSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProspectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "fullName" | "biography" | "businessCategoryName" | "followersCount" | "postsCount" | "verified" | "isBusinessAccount" | "instagramUrl" | "externalUrl" | "businessAddress" | "cidade" | "bairro" | "estado" | "pais" | "whatsapp" | "email" | "profissao" | "especialidades" | "voucher" | "observacoes" | "status" | "origens" | "searchTerms" | "searchSources" | "importedAt" | "updatedAt", ExtArgs["result"]["prospect"]>
+export type ProspectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "fullName" | "biography" | "businessCategoryName" | "followersCount" | "postsCount" | "verified" | "isBusinessAccount" | "instagramUrl" | "externalUrl" | "businessAddress" | "cidade" | "bairro" | "estado" | "pais" | "idioma" | "whatsapp" | "email" | "profissao" | "especialidades" | "voucher" | "observacoes" | "status" | "origens" | "searchTerms" | "searchSources" | "importedAt" | "updatedAt", ExtArgs["result"]["prospect"]>
 
 export type $ProspectPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Prospect"
@@ -1053,6 +1079,7 @@ export type $ProspectPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     bairro: string
     estado: string
     pais: string
+    idioma: string
     whatsapp: string
     email: string
     profissao: string
@@ -1504,6 +1531,7 @@ export interface ProspectFieldRefs {
   readonly bairro: Prisma.FieldRef<"Prospect", 'String'>
   readonly estado: Prisma.FieldRef<"Prospect", 'String'>
   readonly pais: Prisma.FieldRef<"Prospect", 'String'>
+  readonly idioma: Prisma.FieldRef<"Prospect", 'String'>
   readonly whatsapp: Prisma.FieldRef<"Prospect", 'String'>
   readonly email: Prisma.FieldRef<"Prospect", 'String'>
   readonly profissao: Prisma.FieldRef<"Prospect", 'String'>

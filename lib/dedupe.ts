@@ -64,6 +64,7 @@ function mergeProspects(
     bairro: existing.bairro || incoming.bairro,
     estado: existing.estado || incoming.estado,
     pais: existing.pais || incoming.pais,
+    idioma: existing.idioma || incoming.idioma,
 
     whatsapp: existing.whatsapp || incoming.whatsapp,
     email: existing.email || incoming.email,

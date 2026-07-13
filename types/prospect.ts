@@ -34,6 +34,7 @@ export interface Prospect {
   bairro: string;
   estado: string;
   pais: string;
+  idioma: string;
 
   // Contato
 

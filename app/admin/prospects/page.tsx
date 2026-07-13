@@ -28,6 +28,8 @@ const initialFilters: ProspectFilterValues = {
   contactType: "todos",
   businessOnly: false,
   minimumFollowers: 0,
+  maximumFollowers: 0,
+  idioma: "todos",
 };
 
 function normalizeForSearch(value: string): string {
@@ -272,20 +274,38 @@ export default function ProspectsPage() {
   }
 
   const searchTerms = useMemo(() => {
-    const terms = new Set<string>();
+  const terms = new Set<string>();
 
-    prospects.forEach((prospect) => {
-      splitCombinedValues(
-        prospect.searchTerm,
-      ).forEach((term) => {
+  prospects.forEach((prospect) => {
+    splitCombinedValues(prospect.searchTerm).forEach(
+      (term) => {
         terms.add(term);
-      });
-    });
-
-    return Array.from(terms).sort((first, second) =>
-      first.localeCompare(second, "pt-BR"),
+      },
     );
-  }, [prospects]);
+  });
+
+  return Array.from(terms).sort((first, second) =>
+    first.localeCompare(second, "pt-BR"),
+  );
+}, [prospects]);
+
+const languages = useMemo(() => {
+  const languageSet = new Set<string>();
+
+  prospects.forEach((prospect) => {
+    const language = prospect.idioma?.trim();
+
+    if (language) {
+      languageSet.add(language);
+    }
+  });
+
+  return Array.from(languageSet).sort(
+    (first, second) =>
+      first.localeCompare(second, "pt-BR"),
+  );
+}, [prospects]);
+
 
   const filteredProspects = useMemo(() => {
     const normalizedSearch = normalizeForSearch(
@@ -314,6 +334,20 @@ export default function ProspectsPage() {
         ) {
           return false;
         }
+        if (
+  filters.maximumFollowers > 0 &&
+  prospect.followersCount >
+    filters.maximumFollowers
+) {
+  return false;
+}
+
+if (
+  filters.idioma !== "todos" &&
+  prospect.idioma !== filters.idioma
+) {
+  return false;
+}
 
         if (
           filters.contactType === "whatsapp" &&
@@ -361,6 +395,7 @@ export default function ProspectsPage() {
                 prospect.bairro,
                 prospect.estado,
                 prospect.pais,
+                prospect.idioma,
                 prospect.searchTerm,
                 prospect.origem,
                 prospect.observacoes,
@@ -538,6 +573,7 @@ export default function ProspectsPage() {
           <ProspectFilters
             filters={filters}
             searchTerms={searchTerms}
+            languages={languages}
             onChange={setFilters}
             onReset={() =>
               setFilters(initialFilters)

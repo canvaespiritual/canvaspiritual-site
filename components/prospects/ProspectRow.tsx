@@ -152,9 +152,14 @@ export default function ProspectRow({
               prospect.estado ||
               prospect.pais) && (
               <p className="mt-2 text-xs text-zinc-500">
-                {[prospect.cidade, prospect.estado, prospect.pais]
-                  .filter(Boolean)
-                  .join(" • ")}
+                {[
+  prospect.cidade,
+  prospect.estado,
+  prospect.pais,
+  prospect.idioma,
+]
+  .filter(Boolean)
+  .join(" • ")}
               </p>
             )}
           </div>
@@ -360,7 +365,25 @@ export default function ProspectRow({
                   className="mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-500"
                 />
               </label>
-
+                  <label className="text-sm font-medium text-zinc-700">
+  Idioma
+  <select
+    value={prospect.idioma}
+    onChange={(event) =>
+      onUpdate(prospect.username, {
+        idioma: event.target.value,
+        updatedAt: new Date().toISOString(),
+      })
+    }
+    className="mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-500"
+  >
+    <option value="">Indefinido</option>
+    <option value="Português">Português</option>
+    <option value="Espanhol">Espanhol</option>
+    <option value="Inglês">Inglês</option>
+    <option value="Outro">Outro</option>
+  </select>
+</label>
               <label className="text-sm font-medium text-zinc-700">
                 País
                 <input

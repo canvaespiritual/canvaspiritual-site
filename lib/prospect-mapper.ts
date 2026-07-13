@@ -30,6 +30,7 @@ export function databaseProspectToClient(
     bairro: prospect.bairro,
     estado: prospect.estado,
     pais: prospect.pais,
+    idioma: prospect.idioma,
 
     whatsapp: prospect.whatsapp,
     email: prospect.email,

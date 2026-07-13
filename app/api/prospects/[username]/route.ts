@@ -32,6 +32,7 @@ interface UpdateProspectBody {
   bairro?: unknown;
   estado?: unknown;
   pais?: unknown;
+  idioma?: unknown;
   businessAddress?: unknown;
 
   profissao?: unknown;
@@ -141,7 +142,9 @@ export async function PATCH(
     if (body.pais !== undefined) {
       data.pais = normalizeText(body.pais);
     }
-
+    if (body.idioma !== undefined) {
+  data.idioma = normalizeText(body.idioma);
+}
     if (body.businessAddress !== undefined) {
       data.businessAddress = normalizeText(
         body.businessAddress,
