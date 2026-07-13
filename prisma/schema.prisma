@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProspectStatus {
+  novo
+  mensagem_enviada
+  respondeu
+  cadastrado
+  ativado
+  ignorar
+}
+
+model Prospect {
+  id                   String  @id @default(cuid())
+  username             String  @unique
+  fullName             String  @default("")
+  biography            String  @default("") @db.Text
+  businessCategoryName String  @default("")
+  followersCount       Int     @default(0)
+  postsCount           Int     @default(0)
+  verified             Boolean @default(false)
+  isBusinessAccount    Boolean @default(false)
+
+  instagramUrl String @default("")
+  externalUrl  String @default("")
+
+  businessAddress String @default("")
+  cidade          String @default("")
+  bairro          String @default("")
+  estado          String @default("")
+  pais            String @default("")
+
+  whatsapp String @default("")
+  email    String @default("")
+
+  profissao      String   @default("")
+  especialidades String[] @default([])
+
+  voucher     String         @default("")
+  observacoes String         @default("") @db.Text
+  status      ProspectStatus @default(novo)
+
+  origens       String[] @default([])
+  searchTerms   String[] @default([])
+  searchSources String[] @default([])
+
+  importedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([status])
+  @@index([followersCount])
+  @@index([cidade])
+  @@index([estado])
+  @@index([profissao])
+  @@map("prospects")
+}
+
+model ProspectImport {
+  id               String   @id @default(cuid())
+  fileName         String
+  rowsReceived     Int      @default(0)
+  newProspects     Int      @default(0)
+  updatedProspects Int      @default(0)
+  invalidRows      Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("prospect_imports")
+}
