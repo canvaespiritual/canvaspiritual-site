@@ -1,0 +1,19 @@
+{
+  "name": "Central Operacional Canva Espiritual",
+  "short_name": "Central Canva",
+  "description": "Acompanhamento de checkouts e suporte comercial.",
+  "start_url": "/central/checkouts",
+  "scope": "/central/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ]
+}

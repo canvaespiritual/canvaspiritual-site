@@ -19,3 +19,34 @@ export const ProspectStatus = {
 } as const
 
 export type ProspectStatus = (typeof ProspectStatus)[keyof typeof ProspectStatus]
+
+
+export const TrackingEntityType = {
+  campaign: 'campaign',
+  adset: 'adset',
+  ad: 'ad'
+} as const
+
+export type TrackingEntityType = (typeof TrackingEntityType)[keyof typeof TrackingEntityType]
+
+
+export const MessageTemplateType = {
+  checkout_pending: 'checkout_pending',
+  payment_approved: 'payment_approved',
+  followup_pending: 'followup_pending',
+  access_confirmation: 'access_confirmation'
+} as const
+
+export type MessageTemplateType = (typeof MessageTemplateType)[keyof typeof MessageTemplateType]
+
+
+export const CheckoutEventType = {
+  created: 'created',
+  updated: 'updated',
+  payment_approved: 'payment_approved',
+  payment_changed: 'payment_changed',
+  order_linked: 'order_linked',
+  status_changed: 'status_changed'
+} as const
+
+export type CheckoutEventType = (typeof CheckoutEventType)[keyof typeof CheckoutEventType]

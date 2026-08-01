@@ -1,0 +1,80 @@
+﻿.gitignore
+AGENTS.md
+app\admin\prospects\page.tsx
+app\ajuda\[...slug]\page.tsx
+app\ajuda\page.tsx
+app\api\prospects\[username]\route.ts
+app\api\prospects\import\route.ts
+app\api\prospects\route.ts
+app\favicon.ico
+app\globals.css
+app\layout.tsx
+app\page.tsx
+app\parceiros\page.tsx
+app\produtos\page.tsx
+app\sobre\page.tsx
+CLAUDE.md
+components\help\HelpSearch.tsx
+components\prospects\ImportButton.tsx
+components\prospects\ProspectFilters.tsx
+components\prospects\ProspectRow.tsx
+components\prospects\ProspectTable.tsx
+components\prospects\StatusBadge.tsx
+components\prospects\Toolbar.tsx
+content\ajuda\acesso\como-entrar-no-painel.md
+content\ajuda\clientes\como-recuperar-meu-relatorio.md
+content\ajuda\comissoes\como-recebo-minha-comissao.md
+content\ajuda\conta-asaas\minha-conta-asaas-foi-reprovada.md
+content\ajuda\parceiros\como-me-cadastrar.md
+content\ajuda\reembolso\como-solicitar-reembolso.md
+content\ajuda\reembolso\prazo-do-reembolso.md
+eslint.config.mjs
+generated\prisma\browser.ts
+generated\prisma\client.ts
+generated\prisma\commonInputTypes.ts
+generated\prisma\enums.ts
+generated\prisma\internal\class.ts
+generated\prisma\internal\prismaNamespace.ts
+generated\prisma\internal\prismaNamespaceBrowser.ts
+generated\prisma\models.ts
+generated\prisma\models\Prospect.ts
+generated\prisma\models\ProspectImport.ts
+lib\csv.ts
+lib\db.ts
+lib\dedupe.ts
+lib\help.ts
+lib\language.ts
+lib\messages.ts
+lib\prospect-mapper.ts
+lib\prospects-api.ts
+lib\storage.ts
+lib\utils.ts
+next.config.ts
+next-env.d.ts
+package.json
+postcss.config.mjs
+prisma.config.ts
+prisma\migrations\20260713121516_init_prospects\migration.sql
+prisma\migrations\20260713150126_add_prospect_language\migration.sql
+prisma\migrations\migration_lock.toml
+prisma\schema.prisma
+public\file.svg
+public\globe.svg
+public\next.svg
+public\vercel.svg
+public\window.svg
+README.md
+tsconfig.json
+types\prospect.ts
+
+
+
+Campo	Valor  --- banco de dados leads précheckout
+| Campo                         | Valor                              |
+| ----------------------------- | ---------------------------------- |
+| **Host (Server)**             | `interchange.proxy.rlwy.net`       |
+| **Porta**                     | `41314`                            |
+| **Banco de Dados (Database)** | `railway`                          |
+| **Usuário (Username)**        | `postgres`                         |
+| **Senha (Password)**          | `TgCPmdDpDYSwQqySyompipFCNScQToAE` |
+| **Tipo**                      | PostgreSQL                         |

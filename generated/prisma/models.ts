@@ -10,4 +10,8 @@
  */
 export type * from './models/Prospect'
 export type * from './models/ProspectImport'
+export type * from './models/TrackingAlias'
+export type * from './models/MessageTemplate'
+export type * from './models/CheckoutNotificationEvent'
+export type * from './models/PushSubscription'
 export type * from './commonInputTypes'

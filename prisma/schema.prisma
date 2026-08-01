@@ -61,7 +61,6 @@ model Prospect {
   @@index([profissao])
   @@index([idioma])
   @@map("prospects")
-
 }
 
 model ProspectImport {
@@ -75,4 +74,116 @@ model ProspectImport {
 
   @@index([createdAt])
   @@map("prospect_imports")
+}
+
+enum TrackingEntityType {
+  campaign
+  adset
+  ad
+}
+
+enum MessageTemplateType {
+  checkout_pending
+  payment_approved
+  followup_pending
+  access_confirmation
+}
+
+model TrackingAlias {
+  id String @id @default(uuid()) @db.Uuid
+
+  platform   String             @default("meta")
+  entityType TrackingEntityType @map("entity_type")
+  externalId String             @map("external_id")
+  name       String
+
+  adAccountId    String? @map("ad_account_id")
+  platformStatus String? @map("platform_status")
+
+  rawData      Json?     @map("raw_data")
+  lastSyncedAt DateTime? @map("last_synced_at") @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([platform, entityType, externalId])
+  @@index([entityType])
+  @@index([name])
+  @@index([adAccountId])
+  @@map("tracking_aliases")
+}
+
+model MessageTemplate {
+  id String @id @default(uuid()) @db.Uuid
+
+  type MessageTemplateType @unique
+
+  name    String
+  content String  @db.Text
+  active  Boolean @default(true)
+
+  senderName String @default("") @map("sender_name")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("message_templates")
+}
+
+enum CheckoutEventType {
+  created
+  updated
+  payment_approved
+  payment_changed
+  order_linked
+  status_changed
+}
+
+model CheckoutNotificationEvent {
+  id String @id @default(uuid()) @db.Uuid
+
+  checkoutLeadId String @map("checkout_lead_id") @db.Uuid
+
+  eventKey  String            @unique @map("event_key")
+  eventType CheckoutEventType @map("event_type")
+
+  customerName String @default("") @map("customer_name")
+  phone        String @default("")
+
+  previousUpdatedAt DateTime? @map("previous_updated_at") @db.Timestamptz(6)
+  checkoutUpdatedAt DateTime  @map("checkout_updated_at") @db.Timestamptz(6)
+
+  payload Json?
+
+  notifiedAt DateTime? @map("notified_at") @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([checkoutLeadId])
+  @@index([eventType])
+  @@index([checkoutUpdatedAt])
+  @@index([notifiedAt])
+  @@map("checkout_notification_events")
+}
+
+model PushSubscription {
+  id String @id @default(uuid()) @db.Uuid
+
+  endpoint String @unique
+
+  p256dh String
+  auth   String
+
+  userAgent String @default("") @map("user_agent")
+  label     String @default("")
+
+  active Boolean @default(true)
+
+  lastUsedAt DateTime? @map("last_used_at") @db.Timestamptz(6)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([active])
+  @@map("push_subscriptions")
 }

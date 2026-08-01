@@ -27,3 +27,23 @@ export type Prospect = Prisma.ProspectModel
  * 
  */
 export type ProspectImport = Prisma.ProspectImportModel
+/**
+ * Model TrackingAlias
+ * 
+ */
+export type TrackingAlias = Prisma.TrackingAliasModel
+/**
+ * Model MessageTemplate
+ * 
+ */
+export type MessageTemplate = Prisma.MessageTemplateModel
+/**
+ * Model CheckoutNotificationEvent
+ * 
+ */
+export type CheckoutNotificationEvent = Prisma.CheckoutNotificationEventModel
+/**
+ * Model PushSubscription
+ * 
+ */
+export type PushSubscription = Prisma.PushSubscriptionModel

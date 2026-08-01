@@ -52,7 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Prospect: 'Prospect',
-  ProspectImport: 'ProspectImport'
+  ProspectImport: 'ProspectImport',
+  TrackingAlias: 'TrackingAlias',
+  MessageTemplate: 'MessageTemplate',
+  CheckoutNotificationEvent: 'CheckoutNotificationEvent',
+  PushSubscription: 'PushSubscription'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -119,6 +123,70 @@ export const ProspectImportScalarFieldEnum = {
 export type ProspectImportScalarFieldEnum = (typeof ProspectImportScalarFieldEnum)[keyof typeof ProspectImportScalarFieldEnum]
 
 
+export const TrackingAliasScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  entityType: 'entityType',
+  externalId: 'externalId',
+  name: 'name',
+  adAccountId: 'adAccountId',
+  platformStatus: 'platformStatus',
+  rawData: 'rawData',
+  lastSyncedAt: 'lastSyncedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TrackingAliasScalarFieldEnum = (typeof TrackingAliasScalarFieldEnum)[keyof typeof TrackingAliasScalarFieldEnum]
+
+
+export const MessageTemplateScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  name: 'name',
+  content: 'content',
+  active: 'active',
+  senderName: 'senderName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MessageTemplateScalarFieldEnum = (typeof MessageTemplateScalarFieldEnum)[keyof typeof MessageTemplateScalarFieldEnum]
+
+
+export const CheckoutNotificationEventScalarFieldEnum = {
+  id: 'id',
+  checkoutLeadId: 'checkoutLeadId',
+  eventKey: 'eventKey',
+  eventType: 'eventType',
+  customerName: 'customerName',
+  phone: 'phone',
+  previousUpdatedAt: 'previousUpdatedAt',
+  checkoutUpdatedAt: 'checkoutUpdatedAt',
+  payload: 'payload',
+  notifiedAt: 'notifiedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type CheckoutNotificationEventScalarFieldEnum = (typeof CheckoutNotificationEventScalarFieldEnum)[keyof typeof CheckoutNotificationEventScalarFieldEnum]
+
+
+export const PushSubscriptionScalarFieldEnum = {
+  id: 'id',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  userAgent: 'userAgent',
+  label: 'label',
+  active: 'active',
+  lastUsedAt: 'lastUsedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -127,10 +195,35 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
