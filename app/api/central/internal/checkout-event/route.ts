@@ -11,6 +11,7 @@ import {
   registerIncomingCheckoutEvent,
   type IncomingCheckoutEvent,
 } from "@/lib/central/incoming-checkout-event";
+
 import {
   sendPushToActiveSubscriptions,
 } from "@/lib/push/web-push";
@@ -45,8 +46,7 @@ function isAuthorized(
   request: NextRequest,
 ): boolean {
   const expectedSecret = String(
-    process.env.CENTRAL_EVENTS_SECRET ||
-      "",
+    process.env.CENTRAL_EVENTS_SECRET || "",
   ).trim();
 
   if (!expectedSecret) {
@@ -71,6 +71,76 @@ function isAuthorized(
     receivedSecret,
     expectedSecret,
   );
+}
+
+function getCustomerName(
+  body: IncomingCheckoutEvent,
+): string {
+  const customer =
+    typeof body.customer === "object" &&
+    body.customer !== null &&
+    !Array.isArray(body.customer)
+      ? body.customer as Record<string, unknown>
+      : {};
+
+  return (
+    typeof customer.name === "string" &&
+    customer.name.trim()
+      ? customer.name.trim()
+      : "Cliente"
+  );
+}
+
+function getPushMessage(
+  eventType: string,
+  customerName: string,
+): {
+  title: string;
+  body: string;
+} {
+  switch (eventType) {
+    case "payment_approved":
+      return {
+        title: "💰 Venda aprovada!",
+        body:
+          `${customerName} concluiu o pagamento.`,
+      };
+
+    case "created":
+      return {
+        title: "🛒 Novo checkout",
+        body:
+          `${customerName} iniciou um checkout.`,
+      };
+
+    case "status_changed":
+      return {
+        title: "🔄 Status atualizado",
+        body:
+          `O checkout de ${customerName} mudou de status.`,
+      };
+
+    case "order_linked":
+      return {
+        title: "📦 Pedido vinculado",
+        body:
+          `${customerName} recebeu um pedido da Kiwify.`,
+      };
+
+    case "payment_changed":
+      return {
+        title: "💳 Pagamento atualizado",
+        body:
+          `O pagamento de ${customerName} foi atualizado.`,
+      };
+
+    default:
+      return {
+        title: "🔔 Checkout atualizado",
+        body:
+          `${customerName} teve uma nova atualização no checkout.`,
+      };
+  }
 }
 
 export async function POST(
@@ -103,69 +173,52 @@ export async function POST(
       await registerIncomingCheckoutEvent(
         body,
       );
-      if (result.created) {
-  const customer =
-    typeof body.customer === "object" &&
-    body.customer !== null &&
-    !Array.isArray(body.customer)
-      ? body.customer as Record<string, unknown>
-      : {};
 
-  const customerName =
-    typeof customer.name === "string" &&
-    customer.name.trim()
-      ? customer.name.trim()
-      : "Cliente";
+    if (result.created) {
+      const customerName =
+        getCustomerName(body);
 
-  const title =
-    result.eventType === "payment_approved"
-      ? "Pagamento aprovado"
-      : result.eventType === "created"
-        ? "Novo checkout"
-        : "Checkout atualizado";
+      const message =
+        getPushMessage(
+          result.eventType,
+          customerName,
+        );
 
-  const bodyText =
-    result.eventType === "payment_approved"
-      ? `${customerName} concluiu o pagamento.`
-      : result.eventType === "created"
-        ? `${customerName} iniciou um checkout.`
-        : `${customerName} teve uma nova atualização no checkout.`;
+      const delivery =
+        await sendPushToActiveSubscriptions({
+          title: message.title,
+          body: message.body,
 
-  const delivery =
-    await sendPushToActiveSubscriptions({
-      title,
-      body: bodyText,
+          url: "/central/checkouts",
 
-      url: "/central/checkouts",
+          tag:
+            `checkout-event-${result.eventId}`,
 
-      tag: `checkout-event-${result.eventId}`,
+          eventId:
+            result.eventId,
 
-      eventId: result.eventId,
+          checkoutLeadId:
+            typeof body.checkoutLeadId === "string"
+              ? body.checkoutLeadId
+              : undefined,
+        });
 
-      checkoutLeadId:
-        typeof body.checkoutLeadId === "string"
-          ? body.checkoutLeadId
-          : undefined,
-    });
+      console.log(
+        "Web Push enviado:",
+        delivery,
+      );
+    }
 
-  console.log(
-    "Web Push enviado:",
-    delivery,
-  );
-}
-    /*
-     * No próximo passo, o Web Push será
-     * disparado aqui quando result.created=true.
-     */
     return NextResponse.json(
       {
         ok: true,
         ...result,
       },
       {
-        status: result.created
-          ? 201
-          : 200,
+        status:
+          result.created
+            ? 201
+            : 200,
 
         headers: {
           "Cache-Control": "no-store",
@@ -191,14 +244,16 @@ export async function POST(
     return NextResponse.json(
       {
         ok: false,
+
         error: isValidationError
           ? message
           : "Não foi possível registrar o evento.",
       },
       {
-        status: isValidationError
-          ? 400
-          : 500,
+        status:
+          isValidationError
+            ? 400
+            : 500,
 
         headers: {
           "Cache-Control": "no-store",

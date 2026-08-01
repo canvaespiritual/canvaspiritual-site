@@ -80,12 +80,16 @@ async function getServiceWorkerRegistration(): Promise<ServiceWorkerRegistration
     return existing;
   }
 
+ const registration =
   await navigator.serviceWorker.register(
-    "/central-sw.js",
+    "/central-sw.js?v=3",
     {
       scope: "/central/",
+      updateViaCache: "none",
     },
   );
+
+await registration.update();
 
   return navigator.serviceWorker.ready;
 }
@@ -307,8 +311,8 @@ export default function PwaManager() {
           body:
             "Este dispositivo foi conectado à Central Operacional.",
 
-          icon: "/favicon.ico",
-          badge: "/favicon.ico",
+          icon: "/icons/central-192.png",
+          badge: "/icons/central-192.png",
 
           tag: "central-push-enabled",
 
@@ -414,8 +418,8 @@ export default function PwaManager() {
           body:
             "As notificações estão funcionando neste dispositivo.",
 
-          icon: "/favicon.ico",
-          badge: "/favicon.ico",
+          icon: "/icons/central-192.png",
+          badge: "/icons/central-192.png",
 
           tag: `central-local-test-${Date.now()}`,
 
