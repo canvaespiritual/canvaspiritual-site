@@ -78,3 +78,19 @@ Campo	Valor  --- banco de dados leads précheckout
 | **Usuário (Username)**        | `postgres`                         |
 | **Senha (Password)**          | `TgCPmdDpDYSwQqySyompipFCNScQToAE` |
 | **Tipo**                      | PostgreSQL                         |
+
+
+Server:
+nozomi.proxy.rlwy.net
+
+Database:
+railway
+
+Port:
+52963
+
+Username:
+postgres
+
+Password:
+DGMXEbMPQtvvhVPJIrzioDAgpylQIFzh

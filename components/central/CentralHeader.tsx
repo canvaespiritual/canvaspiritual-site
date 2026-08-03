@@ -27,20 +27,27 @@ export default function CentralHeader() {
         </div>
 
         <nav className="mt-5 flex flex-wrap gap-2">
-          <Link
-            href="/central/checkouts"
-            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
-          >
-            Checkouts
-          </Link>
+  <Link
+    href="/central/checkouts"
+    className="rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
+  >
+    Checkouts
+  </Link>
 
-          <Link
-            href="/central/administracao"
-            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
-          >
-            Administração
-          </Link>
-        </nav>
+  <Link
+    href="/central/analytics"
+    className="rounded-lg border border-sky-700 bg-sky-950 px-4 py-2 text-sm font-semibold text-sky-300 transition hover:bg-sky-900 hover:text-white"
+  >
+    Analytics
+  </Link>
+
+  <Link
+    href="/central/administracao"
+    className="rounded-lg border border-neutral-700 px-4 py-2 text-sm font-semibold text-neutral-300 transition hover:bg-neutral-800 hover:text-white"
+  >
+    Administração
+  </Link>
+</nav>
       </div>
     </header>
   );
