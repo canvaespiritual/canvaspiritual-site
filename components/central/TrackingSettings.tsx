@@ -31,6 +31,23 @@ type TrackingResponse = {
   error?: string;
 };
 
+type LandingContent = {
+  id: string;
+  campaignId: string;
+  headline: string;
+  highlightText: string | null;
+  subheadline: string | null;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type LandingContentResponse = {
+  contents?: LandingContent[];
+  content?: LandingContent;
+  error?: string;
+};
+
 const ENTITY_LABELS: Record<
   TrackingEntityType,
   string
@@ -70,6 +87,24 @@ export default function TrackingSettings() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [landingContents, setLandingContents] =
+  useState<LandingContent[]>([]);
+
+const [landingHeadline, setLandingHeadline] =
+  useState("");
+
+const [landingHighlight, setLandingHighlight] =
+  useState("");
+
+const [landingSubheadline, setLandingSubheadline] =
+  useState("");
+
+const [landingActive, setLandingActive] =
+  useState(true);
+
+const [landingSaving, setLandingSaving] =
+  useState(false);
+
   const loadAliases = useCallback(async () => {
     try {
       setLoading(true);
@@ -104,9 +139,44 @@ export default function TrackingSettings() {
     }
   }, []);
 
+  const loadLandingContents =
+  useCallback(async () => {
+    try {
+      const response = await fetch(
+        "/api/central/landing-content",
+        {
+          cache: "no-store",
+        },
+      );
+
+      const data =
+        (await response.json()) as LandingContentResponse;
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Não foi possível carregar as headlines.",
+        );
+      }
+
+      setLandingContents(
+        data.contents ?? [],
+      );
+    } catch (loadError) {
+      console.error(
+        "Erro ao carregar headlines:",
+        loadError,
+      );
+    }
+  }, []);
+
   useEffect(() => {
     void loadAliases();
   }, [loadAliases]);
+
+  useEffect(() => {
+  void loadLandingContents();
+}, [loadLandingContents]);
 
   const visibleAliases = useMemo(() => {
     const normalizedSearch = search
@@ -152,6 +222,29 @@ export default function TrackingSettings() {
       name: alias.name,
       adAccountId: alias.adAccountId ?? "",
     });
+
+    const landing =
+      landingContents.find(
+        (item) =>
+          item.campaignId ===
+          alias.externalId,
+      );
+
+    setLandingHeadline(
+      landing?.headline ?? "",
+    );
+
+    setLandingHighlight(
+      landing?.highlightText ?? "",
+    );
+
+    setLandingSubheadline(
+      landing?.subheadline ?? "",
+    );
+
+    setLandingActive(
+      landing?.active ?? true,
+    );
 
     setError("");
     setSuccess("");
@@ -220,6 +313,90 @@ export default function TrackingSettings() {
     }
   }
 
+  async function handleSaveLandingContent() {
+  if (!editingId) {
+    setError(
+      "Salve primeiro a identificação da campanha.",
+    );
+    return;
+  }
+
+  if (form.entityType !== "campaign") {
+    setError(
+      "Headline personalizada só pode ser configurada para campanhas.",
+    );
+    return;
+  }
+
+  if (!landingHeadline.trim()) {
+    setError(
+      "Informe a headline da landing.",
+    );
+    return;
+  }
+
+  try {
+    setLandingSaving(true);
+    setError("");
+    setSuccess("");
+
+    const response = await fetch(
+      "/api/central/landing-content",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          campaignId:
+            form.externalId,
+
+          headline:
+            landingHeadline,
+
+          highlightText:
+            landingHighlight ||
+            null,
+
+          subheadline:
+            landingSubheadline ||
+            null,
+
+          active:
+            landingActive,
+        }),
+      },
+    );
+
+    const data =
+      (await response.json()) as LandingContentResponse;
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+          "Não foi possível salvar a headline.",
+      );
+    }
+
+    setSuccess(
+      "Headline da campanha salva com sucesso.",
+    );
+
+    await loadLandingContents();
+  } catch (saveError) {
+    setError(
+      saveError instanceof Error
+        ? saveError.message
+        : "Não foi possível salvar a headline.",
+    );
+  } finally {
+    setLandingSaving(false);
+  }
+}
+
   async function handleDelete(
     alias: TrackingAlias,
   ) {
@@ -269,6 +446,51 @@ export default function TrackingSettings() {
       );
     }
   }
+
+  function renderHeadlinePreview(
+  headline: string,
+  highlight: string,
+) {
+  const cleanHeadline = headline.trim();
+  const cleanHighlight = highlight.trim();
+
+  if (!cleanHighlight) {
+    return cleanHeadline;
+  }
+
+  const index = cleanHeadline
+    .toLocaleLowerCase("pt-BR")
+    .indexOf(
+      cleanHighlight.toLocaleLowerCase("pt-BR"),
+    );
+
+  if (index === -1) {
+    return cleanHeadline;
+  }
+
+  const before = cleanHeadline.slice(0, index);
+
+  const highlighted = cleanHeadline.slice(
+    index,
+    index + cleanHighlight.length,
+  );
+
+  const after = cleanHeadline.slice(
+    index + cleanHighlight.length,
+  );
+
+  return (
+    <>
+      {before}
+
+      <span className="text-amber-500">
+        {highlighted}
+      </span>
+
+      {after}
+    </>
+  );
+}
 
   return (
     <div className="space-y-6">
@@ -363,6 +585,113 @@ export default function TrackingSettings() {
               className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-emerald-600"
             />
           </Field>
+
+          {editingId &&
+  form.entityType === "campaign" && (
+    <div className="lg:col-span-2 space-y-4 rounded-2xl border border-neutral-700 bg-neutral-950 p-5">
+      <div>
+        <h4 className="text-base font-semibold text-white">
+          Landing personalizada
+        </h4>
+
+        <p className="mt-1 text-sm text-neutral-500">
+          Se não houver configuração ativa,
+          a página continuará usando a headline
+          padrão.
+        </p>
+      </div>
+
+      <Field label="Headline">
+        <textarea
+          rows={3}
+          value={landingHeadline}
+          onChange={(event) =>
+            setLandingHeadline(
+              event.target.value,
+            )
+          }
+          placeholder="Ex.: Descubra por que a autocura começa antes do tratamento"
+          className="w-full resize-y rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-emerald-600"
+        />
+      </Field>
+
+      <Field label="Trecho em destaque">
+        <input
+          value={landingHighlight}
+          onChange={(event) =>
+            setLandingHighlight(
+              event.target.value,
+            )
+          }
+          placeholder="Ex.: autocura"
+          className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-emerald-600"
+        />
+      </Field>
+
+      <Field label="Subheadline">
+        <textarea
+          rows={3}
+          value={landingSubheadline}
+          onChange={(event) =>
+            setLandingSubheadline(
+              event.target.value,
+            )
+          }
+          placeholder="Texto complementar da página"
+          className="w-full resize-y rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-emerald-600"
+        />
+      </Field>
+
+      <label className="flex items-center gap-3">
+        <input
+          type="checkbox"
+          checked={landingActive}
+          onChange={(event) =>
+            setLandingActive(
+              event.target.checked,
+            )
+          }
+        />
+
+        <span className="text-sm text-neutral-300">
+          Personalização ativa
+        </span>
+      </label>
+
+      <div className="rounded-2xl border border-neutral-800 bg-[#0c0a09] p-6 text-center">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-neutral-500">
+          Prévia
+        </p>
+
+        <h2 className="mx-auto max-w-3xl text-[clamp(28px,5vw,44px)] font-extrabold leading-[1.08] tracking-[-0.02em] text-[#e7e5e4]">
+  {landingHeadline
+    ? renderHeadlinePreview(
+        landingHeadline,
+        landingHighlight,
+      )
+    : "Sua headline aparecerá aqui"}
+</h2>
+
+        <p className="mx-auto mt-3 max-w-2xl text-[clamp(16px,2.5vw,20px)] leading-[1.45] text-[#d6d3d1]">
+          {landingSubheadline ||
+            "Sua subheadline aparecerá aqui."}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() =>
+          void handleSaveLandingContent()
+        }
+        disabled={landingSaving}
+        className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-neutral-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {landingSaving
+          ? "Salvando headline..."
+          : "Salvar headline da landing"}
+      </button>
+    </div>
+)}
 
           <div className="flex flex-wrap gap-3 lg:col-span-2">
             <button

@@ -6,6 +6,7 @@ import {
 } from "react";
 
 import type { CheckoutLead } from "@/types/checkout";
+import ManualSaleForm from "./ManualSaleForm";
 
 interface CheckoutDetailsProps {
   checkout: CheckoutLead | null;
@@ -143,6 +144,105 @@ export default function CheckoutDetails({
               }
             />
           </section>
+          {checkout.sale && (
+  <DetailsSection title="Venda">
+    <DetailItem
+      label="Origem da venda"
+      value={
+        checkout.sale.source === "manual"
+          ? "Recuperação manual"
+          : "Kiwify"
+      }
+    />
+
+    <DetailItem
+      label="Produto"
+      value={
+        checkout.sale.productName ??
+        "Não informado"
+      }
+    />
+
+    <DetailItem
+      label="Valor bruto"
+      value={
+        checkout.sale.grossAmount != null
+          ? checkout.sale.grossAmount.toLocaleString(
+              "pt-BR",
+              {
+                style: "currency",
+                currency:
+                  checkout.sale.currency ||
+                  "BRL",
+              },
+            )
+          : "Não informado"
+      }
+    />
+
+    <DetailItem
+      label="Valor líquido"
+      value={
+        checkout.sale.netAmount != null
+          ? checkout.sale.netAmount.toLocaleString(
+              "pt-BR",
+              {
+                style: "currency",
+                currency:
+                  checkout.sale.currency ||
+                  "BRL",
+              },
+            )
+          : "Não informado"
+      }
+    />
+
+    <DetailItem
+      label="Forma de pagamento"
+      value={
+        checkout.sale.paymentMethod ??
+        "Não informada"
+      }
+    />
+
+    <DetailItem
+      label="Parcelas"
+      value={String(
+        checkout.sale.installments,
+      )}
+    />
+
+    <DetailItem
+      label="Data da venda"
+      value={formatDate(
+        checkout.sale.saleDate,
+      )}
+    />
+
+    {checkout.sale.kiwifyFee != null && (
+      <DetailItem
+        label="Taxa Kiwify"
+        value={checkout.sale.kiwifyFee.toLocaleString(
+          "pt-BR",
+          {
+            style: "currency",
+            currency:
+              checkout.sale.currency ||
+              "BRL",
+          },
+        )}
+      />
+    )}
+
+    {checkout.sale.closerName && (
+      <DetailItem
+        label="Closer"
+        value={checkout.sale.closerName}
+      />
+    )}
+  </DetailsSection>
+  
+)}
 
           <DetailsSection title="Contato">
             <DetailItem
@@ -254,6 +354,14 @@ export default function CheckoutDetails({
               />
             )}
           </DetailsSection>
+          {!checkout.sale && (
+  <ManualSaleForm
+    checkout={checkout}
+    onSaved={() => {
+      window.location.reload();
+    }}
+  />
+)}
 
           {(checkout.pageUrl ||
             checkout.referrer) && (
@@ -264,7 +372,19 @@ export default function CheckoutDetails({
                   href={checkout.pageUrl}
                 />
               )}
+              {checkout.sale?.checkoutUrl && (
+  <LinkDetail
+    label="Reenviar pagamento"
+    href={checkout.sale.checkoutUrl}
+  />
+)}
 
+{checkout.sale?.accessUrl && (
+  <LinkDetail
+    label="Acesso ao produto"
+    href={checkout.sale.accessUrl}
+  />
+)}
               {checkout.referrer && (
                 <LinkDetail
                   label="Referência"

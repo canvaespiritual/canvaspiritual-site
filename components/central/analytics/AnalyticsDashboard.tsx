@@ -207,6 +207,8 @@ const [
   appliedDateTo,
   setAppliedDateTo,
 ] = useState("");
+
+
   const selectedCampaign = useMemo(
     () =>
       campaigns.find(
@@ -224,6 +226,7 @@ const analyticsQuery = useMemo(
     ),
   [appliedDateFrom, appliedDateTo],
 );
+
   useEffect(() => {
     let active = true;
 
@@ -405,28 +408,28 @@ const analyticsQuery = useMemo(
         </div>
       )}
     <DateRangeFilter
-  dateFrom={dateFrom}
-  dateTo={dateTo}
-  onDateFromChange={setDateFrom}
-  onDateToChange={setDateTo}
-  onApply={() => {
-    setSelectedCampaignId(null);
-    setSelectedCampaignSummary(null);
-    setSelectedCampaignRetention([]);
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        onDateFromChange={setDateFrom}
+        onDateToChange={setDateTo}
+        onApply={() => {
+            setSelectedCampaignId(null);
+            setSelectedCampaignSummary(null);
+            setSelectedCampaignRetention([]);
 
-    setAppliedDateFrom(dateFrom);
-    setAppliedDateTo(dateTo);
-  }}
-  onClear={() => {
-    setDateFrom("");
-    setDateTo("");
+            setAppliedDateFrom(dateFrom);
+            setAppliedDateTo(dateTo);
+        }}
+        onClear={() => {
+            setDateFrom("");
+            setDateTo("");
 
-    setAppliedDateFrom("");
-    setAppliedDateTo("");
+            setAppliedDateFrom("");
+            setAppliedDateTo("");
 
-    setSelectedCampaignId(null);
-    setSelectedCampaignSummary(null);
-    setSelectedCampaignRetention([]);
+            setSelectedCampaignId(null);
+            setSelectedCampaignSummary(null);
+            setSelectedCampaignRetention([]);
   }}
 />
       <SummaryCards

@@ -12,6 +12,36 @@ export interface CheckoutMessage {
   content: string;
 }
 
+export interface CheckoutSale {
+  id: string;
+
+  source: "kiwify" | "manual";
+  status: string;
+
+  grossAmount: number | null;
+  netAmount: number | null;
+  currency: string;
+
+  paymentMethod: string | null;
+  installments: number;
+
+  saleDate: string;
+
+  closerName: string | null;
+  notes: string | null;
+
+  kiwifyOrderId: string | null;
+  kiwifyOrderRef: string | null;
+
+  kiwifyFee: number | null;
+
+  productId: string | null;
+  productName: string | null;
+
+  checkoutUrl: string | null;
+  accessUrl: string | null;
+}
+
 export interface CheckoutLead {
   id: string;
 
@@ -60,6 +90,8 @@ export interface CheckoutLead {
 
   paid: boolean;
   paidAt: string | null;
+
+  sale: CheckoutSale | null;
 
   createdAt: string;
   updatedAt: string;

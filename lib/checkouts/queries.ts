@@ -171,10 +171,26 @@ function buildCheckoutMessage(
        * Quando forem adicionados, basta preencher
        * as variáveis abaixo.
        */
-      produto: null,
-      valor: null,
-      link_pagamento: null,
-      link_acesso: null,
+      produto:
+        checkout.sale?.productName ?? null,
+
+          valor:
+            checkout.sale?.grossAmount != null
+              ? checkout.sale.grossAmount.toLocaleString(
+                  "pt-BR",
+                  {
+                    style: "currency",
+                    currency:
+                      checkout.sale.currency || "BRL",
+                  },
+                )
+              : null,
+
+          link_pagamento:
+            checkout.sale?.checkoutUrl ?? null,
+
+          link_acesso:
+            checkout.sale?.accessUrl ?? null,
     },
   );
 
@@ -197,50 +213,77 @@ export async function listCheckoutLeads(
     await precheckoutDb.query<DatabaseCheckoutRowWithSummary>(
       `
         SELECT
-          id,
-          name,
-          email,
-          phone,
+        l.id,
+        l.name,
+        l.email,
+        l.phone,
 
-          utm_source,
-          utm_medium,
-          utm_campaign,
-          utm_content,
-          utm_term,
+        l.utm_source,
+        l.utm_medium,
+        l.utm_campaign,
+        l.utm_content,
+        l.utm_term,
 
-          page_url,
-          referrer,
+        l.page_url,
+        l.referrer,
 
-          status,
+        l.status,
 
-          kiwify_order_id,
-          kiwify_status,
+        l.kiwify_order_id,
+        l.kiwify_status,
 
-          paid_at,
-          pago_em,
+        l.paid_at,
+        l.pago_em,
 
-          created_at,
-          updated_at,
+        l.created_at,
+        l.updated_at,
 
-          pago,
+        l.pago,
+
+        s.id AS sale_id,
+        s.source AS sale_source,
+        s.status AS sale_status,
+
+        s.gross_amount AS sale_gross_amount,
+        s.net_amount AS sale_net_amount,
+        s.currency AS sale_currency,
+
+        s.payment_method AS sale_payment_method,
+        s.installments AS sale_installments,
+
+        s.sale_date AS sale_date,
+
+        s.closer_name AS sale_closer_name,
+        s.notes AS sale_notes,
+
+        s.kiwify_order_id AS sale_kiwify_order_id,
+        s.kiwify_order_ref AS sale_kiwify_order_ref,
+
+        s.kiwify_fee AS sale_kiwify_fee,
+
+        s.product_id AS sale_product_id,
+        s.product_name AS sale_product_name,
+
+        s.checkout_url AS sale_checkout_url,
+        s.access_url AS sale_access_url,
 
           COUNT(*) OVER()::text
             AS total_count,
 
           COUNT(*) FILTER (
-            WHERE pago IS TRUE
+            WHERE l.pago IS TRUE
           ) OVER()::text
             AS paid_count,
 
           COUNT(*) FILTER (
-            WHERE pago IS NOT TRUE
+            WHERE l.pago IS NOT TRUE
           ) OVER()::text
             AS pending_count,
 
           COUNT(*) FILTER (
             WHERE
               (
-                created_at
+                l.created_at
                 AT TIME ZONE 'America/Sao_Paulo'
               )::date
               =
@@ -251,9 +294,18 @@ export async function listCheckoutLeads(
           ) OVER()::text
             AS today_count
 
-        FROM public.leads_precheckout
+        FROM public.leads_precheckout l
 
-        ORDER BY created_at DESC
+          LEFT JOIN LATERAL (
+            SELECT
+              cs.*
+            FROM public.checkout_sales cs
+            WHERE cs.checkout_lead_id = l.id
+            ORDER BY cs.sale_date DESC
+            LIMIT 1
+          ) s ON TRUE
+
+          ORDER BY l.created_at DESC
 
         LIMIT $1
         OFFSET $2
