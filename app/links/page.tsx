@@ -1,6 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import {
+  Suspense,
+  useMemo,
+} from "react";
+
 import { useSearchParams } from "next/navigation";
 
 type LinkItem = {
@@ -73,7 +77,7 @@ function buildTrackedUrl(
   return url.toString();
 }
 
-export default function LinksPage() {
+function LinksContent() {
   const searchParams = useSearchParams();
 
   const tracking = useMemo(() => {
@@ -397,5 +401,21 @@ export default function LinksPage() {
         }
       `}</style>
     </main>
+  );
+}
+export default function LinksPage() {
+  return (
+    <Suspense
+      fallback={
+        <main
+          style={{
+            minHeight: "100vh",
+            background: "#080808",
+          }}
+        />
+      }
+    >
+      <LinksContent />
+    </Suspense>
   );
 }
