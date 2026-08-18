@@ -67,6 +67,27 @@ export interface CampaignAnalyticsRow {
   averageMaxReachedSecond: number;
 }
 
+export interface CampaignAdAnalyticsRow {
+  campaignId: string | null;
+  campaignName: string | null;
+
+  adId: string | null;
+  adName: string | null;
+
+  sessions: number;
+  visitors: number;
+  plays: number;
+  pitchReached: number;
+  checkoutOpened: number;
+
+  playRate: number;
+  pitchRate: number;
+  checkoutRate: number;
+
+  averageWatchSeconds: number;
+  averageMaxReachedSecond: number;
+}
+
 interface DatabaseAnalyticsSummaryRow {
   visitors: string;
   sessions: string;
@@ -93,6 +114,23 @@ interface DatabaseTrafficSourceRow {
 interface DatabaseCampaignAnalyticsRow {
   campaign_id: string | null;
   campaign_name: string | null;
+
+  sessions: string;
+  visitors: string;
+  plays: string;
+  pitch_reached: string;
+  checkout_opened: string;
+
+  average_watch_seconds: string | null;
+  average_max_reached_second: string | null;
+}
+
+interface DatabaseCampaignAdAnalyticsRow {
+  campaign_id: string | null;
+  campaign_name: string | null;
+
+  ad_id: string | null;
+  ad_name: string | null;
 
   sessions: string;
   visitors: string;
@@ -656,6 +694,177 @@ export async function getCampaignAnalytics(
           row.campaign_id,
           trackingAliases.campaigns,
         ),
+
+      sessions,
+      visitors,
+      plays,
+      pitchReached,
+      checkoutOpened,
+
+      playRate:
+        calculateRate(
+          plays,
+          sessions,
+        ),
+
+      pitchRate:
+        calculateRate(
+          pitchReached,
+          plays,
+        ),
+
+      checkoutRate:
+        calculateRate(
+          checkoutOpened,
+          plays,
+        ),
+
+      averageWatchSeconds:
+        Number(
+          parseDecimal(
+            row.average_watch_seconds,
+          ).toFixed(2),
+        ),
+
+      averageMaxReachedSecond:
+        Number(
+          parseDecimal(
+            row.average_max_reached_second,
+          ).toFixed(2),
+        ),
+    };
+  });
+}
+export async function getCampaignAdAnalytics(
+  filters: AnalyticsFilters = {},
+): Promise<CampaignAdAnalyticsRow[]> {
+  const {
+    whereSql,
+    values,
+  } = buildSessionFilter(filters, "s");
+
+  const result =
+    await analyticsDb.query<DatabaseCampaignAdAnalyticsRow>(
+      `
+        SELECT
+          s.campaign_id,
+
+          MAX(
+            NULLIF(
+              TRIM(s.campaign_name),
+              ''
+            )
+          ) AS campaign_name,
+
+          s.ad_id,
+
+          MAX(
+            NULLIF(
+              TRIM(s.ad_name),
+              ''
+            )
+          ) AS ad_name,
+
+          COUNT(*)::text
+            AS sessions,
+
+          COUNT(
+            DISTINCT s.visitor_id
+          )::text
+            AS visitors,
+
+          COUNT(*) FILTER (
+            WHERE s.play_started IS TRUE
+          )::text
+            AS plays,
+
+          COUNT(*) FILTER (
+            WHERE s.pitch_reached IS TRUE
+          )::text
+            AS pitch_reached,
+
+          COUNT(*) FILTER (
+            WHERE s.checkout_clicked IS TRUE
+          )::text
+            AS checkout_opened,
+
+          COALESCE(
+            AVG(s.total_watch_seconds),
+            0
+          )::text
+            AS average_watch_seconds,
+
+          COALESCE(
+            AVG(s.max_reached_second),
+            0
+          )::text
+            AS average_max_reached_second
+
+        FROM public.analytics_sessions s
+
+        ${whereSql}
+
+        GROUP BY
+          s.campaign_id,
+          s.ad_id
+
+        ORDER BY COUNT(*) DESC
+      `,
+      values,
+    );
+
+  const metaAliases =
+    await getTrackingAliasMaps("meta");
+
+  return result.rows.map((row) => {
+    const sessions =
+      parseInteger(row.sessions);
+
+    const visitors =
+      parseInteger(row.visitors);
+
+    const plays =
+      parseInteger(row.plays);
+
+    const pitchReached =
+      parseInteger(row.pitch_reached);
+
+    const checkoutOpened =
+      parseInteger(row.checkout_opened);
+
+    const campaignAlias =
+      row.campaign_id
+        ? metaAliases.campaigns[
+            row.campaign_id
+          ] ?? null
+        : null;
+
+    const adAlias =
+      row.ad_id
+        ? metaAliases.ads[
+            row.ad_id
+          ] ?? null
+        : null;
+
+    return {
+      campaignId:
+        row.campaign_id,
+
+      campaignName:
+        campaignAlias ||
+        row.campaign_name ||
+        applyTrackingAlias(
+          row.campaign_id,
+          metaAliases.campaigns,
+        ),
+
+      adId:
+        row.ad_id,
+
+      adName:
+        adAlias ||
+        row.ad_name ||
+        row.ad_id,
 
       sessions,
       visitors,

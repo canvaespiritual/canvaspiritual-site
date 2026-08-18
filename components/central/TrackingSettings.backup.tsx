@@ -48,23 +48,6 @@ type LandingContentResponse = {
   error?: string;
 };
 
-type AdLandingContent = {
-  id: string;
-  adId: string;
-  headline: string;
-  highlightText: string | null;
-  subheadline: string | null;
-  active: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type AdLandingContentResponse = {
-  contents?: AdLandingContent[];
-  content?: AdLandingContent;
-  error?: string;
-};
-
 const ENTITY_LABELS: Record<
   TrackingEntityType,
   string
@@ -106,9 +89,6 @@ export default function TrackingSettings() {
 
   const [landingContents, setLandingContents] =
   useState<LandingContent[]>([]);
-
-const [adLandingContents, setAdLandingContents] =
-  useState<AdLandingContent[]>([]);
 
 const [landingHeadline, setLandingHeadline] =
   useState("");
@@ -190,37 +170,6 @@ const [landingSaving, setLandingSaving] =
     }
   }, []);
 
-  const loadAdLandingContents =
-  useCallback(async () => {
-    try {
-      const response = await fetch(
-        "/api/central/ad-landing-content",
-        {
-          cache: "no-store",
-        },
-      );
-
-      const data =
-        (await response.json()) as AdLandingContentResponse;
-
-      if (!response.ok) {
-        throw new Error(
-          data.error ||
-            "Não foi possível carregar as headlines dos anúncios.",
-        );
-      }
-
-      setAdLandingContents(
-        data.contents ?? [],
-      );
-    } catch (loadError) {
-      console.error(
-        "Erro ao carregar headlines dos anúncios:",
-        loadError,
-      );
-    }
-  }, []);
-
   useEffect(() => {
     void loadAliases();
   }, [loadAliases]);
@@ -228,10 +177,6 @@ const [landingSaving, setLandingSaving] =
   useEffect(() => {
   void loadLandingContents();
 }, [loadLandingContents]);
-
-useEffect(() => {
-  void loadAdLandingContents();
-}, [loadAdLandingContents]);
 
   const visibleAliases = useMemo(() => {
     const normalizedSearch = search
@@ -279,19 +224,11 @@ useEffect(() => {
     });
 
     const landing =
-  alias.entityType === "campaign"
-    ? landingContents.find(
+      landingContents.find(
         (item) =>
           item.campaignId ===
           alias.externalId,
-      )
-    : alias.entityType === "ad"
-      ? adLandingContents.find(
-          (item) =>
-            item.adId ===
-            alias.externalId,
-        )
-      : null;
+      );
 
     setLandingHeadline(
       landing?.headline ?? "",
@@ -376,20 +313,17 @@ useEffect(() => {
     }
   }
 
-async function handleSaveLandingContent() {
+  async function handleSaveLandingContent() {
   if (!editingId) {
     setError(
-      "Salve primeiro a identificação.",
+      "Salve primeiro a identificação da campanha.",
     );
     return;
   }
 
-  if (
-    form.entityType !== "campaign" &&
-    form.entityType !== "ad"
-  ) {
+  if (form.entityType !== "campaign") {
     setError(
-      "Headline personalizada pode ser configurada para campanhas ou anúncios.",
+      "Headline personalizada só pode ser configurada para campanhas.",
     );
     return;
   }
@@ -406,35 +340,8 @@ async function handleSaveLandingContent() {
     setError("");
     setSuccess("");
 
-    const isAd =
-      form.entityType === "ad";
-
-    const endpoint = isAd
-      ? "/api/central/ad-landing-content"
-      : "/api/central/landing-content";
-
-    const body = isAd
-      ? {
-          adId: form.externalId,
-          headline: landingHeadline,
-          highlightText:
-            landingHighlight || null,
-          subheadline:
-            landingSubheadline || null,
-          active: landingActive,
-        }
-      : {
-          campaignId: form.externalId,
-          headline: landingHeadline,
-          highlightText:
-            landingHighlight || null,
-          subheadline:
-            landingSubheadline || null,
-          active: landingActive,
-        };
-
     const response = await fetch(
-      endpoint,
+      "/api/central/landing-content",
       {
         method: "POST",
 
@@ -443,14 +350,29 @@ async function handleSaveLandingContent() {
             "application/json",
         },
 
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          campaignId:
+            form.externalId,
+
+          headline:
+            landingHeadline,
+
+          highlightText:
+            landingHighlight ||
+            null,
+
+          subheadline:
+            landingSubheadline ||
+            null,
+
+          active:
+            landingActive,
+        }),
       },
     );
 
     const data =
-      (await response.json()) as
-        | LandingContentResponse
-        | AdLandingContentResponse;
+      (await response.json()) as LandingContentResponse;
 
     if (!response.ok) {
       throw new Error(
@@ -460,16 +382,10 @@ async function handleSaveLandingContent() {
     }
 
     setSuccess(
-      isAd
-        ? "Headline do anúncio salva com sucesso."
-        : "Headline da campanha salva com sucesso.",
+      "Headline da campanha salva com sucesso.",
     );
 
-    if (isAd) {
-      await loadAdLandingContents();
-    } else {
-      await loadLandingContents();
-    }
+    await loadLandingContents();
   } catch (saveError) {
     setError(
       saveError instanceof Error
@@ -601,7 +517,6 @@ async function handleSaveLandingContent() {
           <Field label="Tipo">
             <select
               value={form.entityType}
-              disabled={Boolean(editingId)}
               onChange={(event) =>
                 setForm((current) => ({
                   ...current,
@@ -643,7 +558,6 @@ async function handleSaveLandingContent() {
           <Field label="ID original">
             <input
               required
-              disabled={Boolean(editingId)}
               value={form.externalId}
               onChange={(event) =>
                 setForm((current) => ({
@@ -653,7 +567,7 @@ async function handleSaveLandingContent() {
                 }))
               }
               placeholder="Ex.: 120247350038810574"
-              className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-emerald-600"
             />
           </Field>
 
@@ -673,18 +587,12 @@ async function handleSaveLandingContent() {
           </Field>
 
           {editingId &&
-  (
-    form.entityType === "campaign" ||
-    form.entityType === "ad"
-  ) && (
+  form.entityType === "campaign" && (
     <div className="lg:col-span-2 space-y-4 rounded-2xl border border-neutral-700 bg-neutral-950 p-5">
       <div>
         <h4 className="text-base font-semibold text-white">
-  Landing personalizada por{" "}
-  {form.entityType === "ad"
-    ? "anúncio"
-    : "campanha"}
-</h4>
+          Landing personalizada
+        </h4>
 
         <p className="mt-1 text-sm text-neutral-500">
           Se não houver configuração ativa,
@@ -779,10 +687,8 @@ async function handleSaveLandingContent() {
         className="rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-neutral-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {landingSaving
-  ? "Salvando headline..."
-  : form.entityType === "ad"
-    ? "Salvar headline do anúncio"
-    : "Salvar headline da campanha"}
+          ? "Salvando headline..."
+          : "Salvar headline da landing"}
       </button>
     </div>
 )}

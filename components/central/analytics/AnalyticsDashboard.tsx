@@ -11,6 +11,8 @@ import { RetentionChart } from "@/components/central/analytics/RetentionChart";
 import { CampaignTable } from "@/components/central/analytics/CampaignTable";
 import { CampaignRetentionChart } from "@/components/central/analytics/CampaignRetentionChart";
 import { DateRangeFilter } from "@/components/central/analytics/DateRangeFilter";
+import { AdTable } from "@/components/central/analytics/AdTable";
+
 type AnalyticsSummary = {
   visitors: number;
   sessions: number;
@@ -50,6 +52,27 @@ type CampaignAnalyticsRow = {
   averageMaxReachedSecond: number;
 };
 
+type AdAnalyticsRow = {
+  campaignId: string | null;
+  campaignName: string | null;
+
+  adId: string | null;
+  adName: string | null;
+
+  sessions: number;
+  visitors: number;
+  plays: number;
+  pitchReached: number;
+  checkoutOpened: number;
+
+  playRate: number;
+  pitchRate: number;
+  checkoutRate: number;
+
+  averageWatchSeconds: number;
+  averageMaxReachedSecond: number;
+};
+
 type SummaryResponse = {
   ok: boolean;
   summary?: AnalyticsSummary;
@@ -73,6 +96,12 @@ type CampaignDetailsResponse = {
   campaignId?: string;
   summary?: AnalyticsSummary;
   retention?: RetentionPoint[];
+  error?: string;
+};
+
+type AdsResponse = {
+  ok: boolean;
+  ads?: AdAnalyticsRow[];
   error?: string;
 };
 
@@ -119,6 +148,7 @@ async function fetchJson<T>(
 
   return data;
 }
+
 function buildAnalyticsQuery(
   dateFrom: string,
   dateTo: string,
@@ -144,6 +174,35 @@ function buildAnalyticsQuery(
   return query ? `?${query}` : "";
 }
 
+function buildCampaignAdsQuery(
+  campaignId: string,
+  dateFrom: string,
+  dateTo: string,
+): string {
+  const params = new URLSearchParams();
+
+  params.set(
+    "campaign_id",
+    campaignId,
+  );
+
+  if (dateFrom) {
+    params.set(
+      "date_from",
+      `${dateFrom}T00:00:00-03:00`,
+    );
+  }
+
+  if (dateTo) {
+    params.set(
+      "date_to",
+      `${dateTo}T23:59:59.999-03:00`,
+    );
+  }
+
+  return `?${params.toString()}`;
+}
+
 export function AnalyticsDashboard() {
   const [
     summary,
@@ -161,6 +220,11 @@ export function AnalyticsDashboard() {
     campaigns,
     setCampaigns,
   ] = useState<CampaignAnalyticsRow[]>([]);
+
+  const [
+    ads,
+    setAds,
+  ] = useState<AdAnalyticsRow[]>([]);
 
   const [
     selectedCampaignId,
@@ -194,20 +258,25 @@ export function AnalyticsDashboard() {
     setError,
   ] = useState<string | null>(null);
 
-  const [dateFrom, setDateFrom] = useState("");
+  const [
+    dateFrom,
+    setDateFrom,
+  ] = useState("");
 
-const [dateTo, setDateTo] = useState("");
+  const [
+    dateTo,
+    setDateTo,
+  ] = useState("");
 
-const [
-  appliedDateFrom,
-  setAppliedDateFrom,
-] = useState("");
+  const [
+    appliedDateFrom,
+    setAppliedDateFrom,
+  ] = useState("");
 
-const [
-  appliedDateTo,
-  setAppliedDateTo,
-] = useState("");
-
+  const [
+    appliedDateTo,
+    setAppliedDateTo,
+  ] = useState("");
 
   const selectedCampaign = useMemo(
     () =>
@@ -218,14 +287,18 @@ const [
       ) ?? null,
     [campaigns, selectedCampaignId],
   );
-const analyticsQuery = useMemo(
-  () =>
-    buildAnalyticsQuery(
+
+  const analyticsQuery = useMemo(
+    () =>
+      buildAnalyticsQuery(
+        appliedDateFrom,
+        appliedDateTo,
+      ),
+    [
       appliedDateFrom,
       appliedDateTo,
-    ),
-  [appliedDateFrom, appliedDateTo],
-);
+    ],
+  );
 
   useEffect(() => {
     let active = true;
@@ -326,25 +399,49 @@ const analyticsQuery = useMemo(
       setSelectedCampaignId(null);
       setSelectedCampaignSummary(null);
       setSelectedCampaignRetention([]);
+      setAds([]);
       return;
     }
 
     setSelectedCampaignId(campaignId);
     setCampaignLoading(true);
     setError(null);
+    setAds([]);
 
     try {
-      const response =
-        await fetchJson<CampaignDetailsResponse>(
-         `/api/central/analytics/campaign/${encodeURIComponent(
-  campaignId,
-)}${analyticsQuery}`,
+      const campaignAdsQuery =
+        buildCampaignAdsQuery(
+          campaignId,
+          appliedDateFrom,
+          appliedDateTo,
         );
+
+      const [
+        response,
+        adsResponse,
+      ] = await Promise.all([
+        fetchJson<CampaignDetailsResponse>(
+          `/api/central/analytics/campaign/${encodeURIComponent(
+            campaignId,
+          )}${analyticsQuery}`,
+        ),
+
+        fetchJson<AdsResponse>(
+          `/api/central/analytics/ads${campaignAdsQuery}`,
+        ),
+      ]);
 
       if (!response.ok) {
         throw new Error(
           response.error ||
             "Erro ao carregar a campanha.",
+        );
+      }
+
+      if (!adsResponse.ok) {
+        throw new Error(
+          adsResponse.error ||
+            "Erro ao carregar os anúncios.",
         );
       }
 
@@ -354,6 +451,10 @@ const analyticsQuery = useMemo(
 
       setSelectedCampaignRetention(
         response.retention ?? [],
+      );
+
+      setAds(
+        adsResponse.ads ?? [],
       );
     } catch (campaignError) {
       console.error(
@@ -407,31 +508,35 @@ const analyticsQuery = useMemo(
           {error}
         </div>
       )}
-    <DateRangeFilter
+
+      <DateRangeFilter
         dateFrom={dateFrom}
         dateTo={dateTo}
         onDateFromChange={setDateFrom}
         onDateToChange={setDateTo}
         onApply={() => {
-            setSelectedCampaignId(null);
-            setSelectedCampaignSummary(null);
-            setSelectedCampaignRetention([]);
+          setSelectedCampaignId(null);
+          setSelectedCampaignSummary(null);
+          setSelectedCampaignRetention([]);
+          setAds([]);
 
-            setAppliedDateFrom(dateFrom);
-            setAppliedDateTo(dateTo);
+          setAppliedDateFrom(dateFrom);
+          setAppliedDateTo(dateTo);
         }}
         onClear={() => {
-            setDateFrom("");
-            setDateTo("");
+          setDateFrom("");
+          setDateTo("");
 
-            setAppliedDateFrom("");
-            setAppliedDateTo("");
+          setAppliedDateFrom("");
+          setAppliedDateTo("");
 
-            setSelectedCampaignId(null);
-            setSelectedCampaignSummary(null);
-            setSelectedCampaignRetention([]);
-  }}
-/>
+          setSelectedCampaignId(null);
+          setSelectedCampaignSummary(null);
+          setSelectedCampaignRetention([]);
+          setAds([]);
+        }}
+      />
+
       <SummaryCards
         {...(
           selectedCampaignSummary ||
@@ -440,31 +545,50 @@ const analyticsQuery = useMemo(
       />
 
       {selectedCampaignId ? (
-        <div
-          style={{
-            position: "relative",
-          }}
-        >
-          {campaignLoading && (
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                zIndex: 2,
-                display: "grid",
-                placeItems: "center",
-                borderRadius: "16px",
-                background:
-                  "rgba(255,255,255,0.78)",
-                color: "#475569",
-                fontWeight: 600,
-              }}
-            >
-              Carregando campanha...
-            </div>
-          )}
+        <>
+          <div
+            style={{
+              position: "relative",
+            }}
+          >
+            {campaignLoading && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  zIndex: 2,
+                  display: "grid",
+                  placeItems: "center",
+                  borderRadius: "16px",
+                  background:
+                    "rgba(255,255,255,0.78)",
+                  color: "#475569",
+                  fontWeight: 600,
+                }}
+              >
+                Carregando campanha...
+              </div>
+            )}
 
-          <CampaignRetentionChart
+            <CampaignRetentionChart
+              campaignLabel={
+                selectedCampaign
+                  ? getCampaignLabel(
+                      selectedCampaign,
+                    )
+                  : selectedCampaignId
+              }
+              data={
+                selectedCampaignRetention
+              }
+              onClear={() =>
+                selectCampaign(null)
+              }
+            />
+          </div>
+
+          <AdTable
+            ads={ads}
             campaignLabel={
               selectedCampaign
                 ? getCampaignLabel(
@@ -472,16 +596,12 @@ const analyticsQuery = useMemo(
                   )
                 : selectedCampaignId
             }
-            data={
-              selectedCampaignRetention
-            }
-            onClear={() =>
-              selectCampaign(null)
-            }
           />
-        </div>
+        </>
       ) : (
-        <RetentionChart data={retention} />
+        <RetentionChart
+          data={retention}
+        />
       )}
 
       <CampaignTable
