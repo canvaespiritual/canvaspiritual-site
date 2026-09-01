@@ -389,7 +389,8 @@ export const ModelName = {
   TrackingAlias: 'TrackingAlias',
   MessageTemplate: 'MessageTemplate',
   CheckoutNotificationEvent: 'CheckoutNotificationEvent',
-  PushSubscription: 'PushSubscription'
+  PushSubscription: 'PushSubscription',
+  QuizLead: 'QuizLead'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "prospect" | "prospectImport" | "trackingAlias" | "messageTemplate" | "checkoutNotificationEvent" | "pushSubscription"
+    modelProps: "prospect" | "prospectImport" | "trackingAlias" | "messageTemplate" | "checkoutNotificationEvent" | "pushSubscription" | "quizLead"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +854,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    QuizLead: {
+      payload: Prisma.$QuizLeadPayload<ExtArgs>
+      fields: Prisma.QuizLeadFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuizLeadFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuizLeadFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>
+        }
+        findFirst: {
+          args: Prisma.QuizLeadFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuizLeadFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>
+        }
+        findMany: {
+          args: Prisma.QuizLeadFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>[]
+        }
+        create: {
+          args: Prisma.QuizLeadCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>
+        }
+        createMany: {
+          args: Prisma.QuizLeadCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuizLeadCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>[]
+        }
+        delete: {
+          args: Prisma.QuizLeadDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>
+        }
+        update: {
+          args: Prisma.QuizLeadUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuizLeadDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuizLeadUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuizLeadUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuizLeadUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizLeadPayload>
+        }
+        aggregate: {
+          args: Prisma.QuizLeadAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuizLead>
+        }
+        groupBy: {
+          args: Prisma.QuizLeadGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuizLeadGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuizLeadCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuizLeadCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1002,6 +1077,26 @@ export const PushSubscriptionScalarFieldEnum = {
 } as const
 
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
+export const QuizLeadScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  language: 'language',
+  affiliateRef: 'affiliateRef',
+  mediaVibracional: 'mediaVibracional',
+  zonaPredominante: 'zonaPredominante',
+  codigoArquetipo: 'codigoArquetipo',
+  source: 'source',
+  payload: 'payload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuizLeadScalarFieldEnum = (typeof QuizLeadScalarFieldEnum)[keyof typeof QuizLeadScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1299,6 +1394,7 @@ export type GlobalOmitConfig = {
   messageTemplate?: Prisma.MessageTemplateOmit
   checkoutNotificationEvent?: Prisma.CheckoutNotificationEventOmit
   pushSubscription?: Prisma.PushSubscriptionOmit
+  quizLead?: Prisma.QuizLeadOmit
 }
 
 /* Types for Logging */

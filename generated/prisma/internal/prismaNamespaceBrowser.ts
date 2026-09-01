@@ -56,7 +56,8 @@ export const ModelName = {
   TrackingAlias: 'TrackingAlias',
   MessageTemplate: 'MessageTemplate',
   CheckoutNotificationEvent: 'CheckoutNotificationEvent',
-  PushSubscription: 'PushSubscription'
+  PushSubscription: 'PushSubscription',
+  QuizLead: 'QuizLead'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -185,6 +186,26 @@ export const PushSubscriptionScalarFieldEnum = {
 } as const
 
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
+export const QuizLeadScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  language: 'language',
+  affiliateRef: 'affiliateRef',
+  mediaVibracional: 'mediaVibracional',
+  zonaPredominante: 'zonaPredominante',
+  codigoArquetipo: 'codigoArquetipo',
+  source: 'source',
+  payload: 'payload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuizLeadScalarFieldEnum = (typeof QuizLeadScalarFieldEnum)[keyof typeof QuizLeadScalarFieldEnum]
 
 
 export const SortOrder = {

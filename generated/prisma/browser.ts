@@ -47,3 +47,8 @@ export type CheckoutNotificationEvent = Prisma.CheckoutNotificationEventModel
  * 
  */
 export type PushSubscription = Prisma.PushSubscriptionModel
+/**
+ * Model QuizLead
+ * 
+ */
+export type QuizLead = Prisma.QuizLeadModel

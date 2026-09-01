@@ -187,3 +187,31 @@ model PushSubscription {
   @@index([active])
   @@map("push_subscriptions")
 }
+
+model QuizLead {
+  id String @id @default(uuid()) @db.Uuid
+
+  sessionId String @unique @map("session_id")
+  name      String @default("")
+  email     String @default("")
+  phone     String @default("")
+
+  language     String @default("")
+  affiliateRef String? @map("affiliate_ref")
+
+  mediaVibracional Float?  @map("media_vibracional")
+  zonaPredominante String?  @map("zona_predominante")
+  codigoArquetipo  String?  @map("codigo_arquetipo")
+
+  source String @default("quiz")
+
+  payload Json?
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([createdAt])
+  @@index([phone])
+  @@index([email])
+  @@map("quiz_leads")
+}

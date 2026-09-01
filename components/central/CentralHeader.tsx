@@ -33,12 +33,26 @@ export default function CentralHeader() {
   >
     Checkouts
   </Link>
+  <Link
+    href="/central/leads-quiz"
+    className="rounded-lg border border-violet-700 bg-violet-950 px-4 py-2 text-sm font-semibold text-violet-300 transition hover:bg-violet-900 hover:text-white"
+  >
+    Leads Quiz
+  </Link>
+
 
   <Link
     href="/central/analytics"
     className="rounded-lg border border-sky-700 bg-sky-950 px-4 py-2 text-sm font-semibold text-sky-300 transition hover:bg-sky-900 hover:text-white"
   >
     Analytics
+  </Link>
+
+  <Link
+    href="/central/financeiro"
+    className="rounded-lg border border-emerald-700 bg-emerald-950 px-4 py-2 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-900 hover:text-white"
+  >
+    Financeiro
   </Link>
 
   <Link
@@ -52,3 +66,4 @@ export default function CentralHeader() {
     </header>
   );
 }
+
